@@ -1,0 +1,122 @@
+public class GarbageTruck {
+    public static void main(String[] args) {
+        //insertTraverseLinkedList();
+        //System.out.println("Hello world!");
+       // stringReverse("Maimuna");
+       // swapWithoutThird(4,2);
+       // garbageColl(new String[]{"MMM","PGM","GP"}, new int[]{3,10});//37
+        //garbageColl(new String[]{"G","P","GP","GG"},new int[]{2,4,3});//21
+        //garbageColl(new String[]{"G","M","P"}, new int[]{1,3});//8
+        //garbageColl(new String[]{"MGMGM","GM","PM","P"}, new int[]{3,5,5});//34 M13 G6 p15
+    }
+    public static String stringReverse(String s){
+        StringBuffer sb=new StringBuffer(s);
+        sb.reverse();
+        System.out.println(sb);
+        return sb.toString();
+    }
+    public static void swapWithoutThird(int a, int b){
+      //a=4, b=2
+        System.out.printf("Before swap a=%s  b=%s \n",a, b);
+        a=a+b; //a=6
+        b=a-b;//6-2=4
+        a=a-b;//6-4=2
+        System.out.println("After swap a="+a+" b="+b);
+
+    }
+    public static  int totalTimePerTruckUtil(String[] garbage, int[] travel, char truckType){
+        Map<Character,Integer> unitCountPerHome=new HashMap<>();
+        int totalTimePerTruck=0;
+        for(int i=0;i<garbage.length;i++) {
+            List<String> g = Arrays.stream(garbage).collect(Collectors.toList()) .subList(i, garbage.length-1
+             );
+            int count = 0;
+            if (garbage[i].contains(String.valueOf(truckType))) {
+                for (char unit : garbage[i].toCharArray()) {
+
+                    unitCountPerHome.put(unit, unitCountPerHome.getOrDefault(unit, 0) + 1);
+                }
+            }
+            if (i == 0) {
+                totalTimePerTruck = unitCountPerHome.getOrDefault(truckType, 0);
+            }
+            if (i > 0 && g.stream().anyMatch(str -> str.contains(String.valueOf(truckType)))) {
+                //else{
+                if (i == garbage.length - 1 && unitCountPerHome.getOrDefault(truckType, 0) == 0) {
+                    totalTimePerTruck = totalTimePerTruck + 0;
+                } else {
+                    totalTimePerTruck = totalTimePerTruck + travel[i - 1] + unitCountPerHome.getOrDefault(truckType, 0);
+                }
+            }
+            if (unitCountPerHome.size() > 0) unitCountPerHome.clear();
+
+        }
+        System.out.println("Total time for truck "+truckType+" is "+totalTimePerTruck);
+        return totalTimePerTruck;
+    }
+    public static int garbageColl(String[] garbage, int[] travel){
+        int finalTime=0;
+        List timeList=new ArrayList<Integer>();
+        Set<Character> trucksSet=new HashSet();
+        Arrays.stream(garbage).forEach(arr->{
+            for (char c : arr.toCharArray()) {
+                trucksSet.add(c);
+            }
+
+        });
+      for(char truck:trucksSet){
+          //finalTime=finalTime+ totalTimePerTruckUtil(garbage,travel,truck);
+          timeList.add( totalTimePerTruckUtil(garbage,travel,truck));
+      }
+        System.out.println("Final Time is:" +Collections.min(timeList,Collections.reverseOrder())
+                );
+      return finalTime;
+    }
+
+    public static int smoothDescentPeriods(int[] prices){
+        //{3,2,1,4}
+        //[3],[2],[3,2],[1],[2,1],[3,2,1],[4]
+        int total=prices.length;
+        if(prices.length>1) {
+            for (int i = 1; i < prices.length; i++) {
+                if(prices[i-1]-1==prices[i]){
+                    total=total+1;
+                }
+            }
+        }
+        return total;
+    }
+  public static void insertTraverseLinkedList(ListNode head){
+        //TODO:make this dynamic
+      ListNode previous=null, current=head,nextNode;
+        ListNode one=new ListNode(1);
+      ListNode two=new ListNode(8);
+      ListNode three=new ListNode(9);
+      one.next=two;
+      two.next=three;
+      //ListNode current=one;
+      int num= current.val;int next=0;
+      while(current!=null){
+          System.out.println(current.val);
+          if(current.next!=null) next=current.next.val;
+          if(current.next!=null)num=(num*10)+(next);
+          current=current.next;
+          //System.out.println(num);
+      }
+      System.out.println(num);
+      num=num*2;
+      System.out.println(num);
+      //TODO:add in new listNode
+  }
+
+
+}
+class ListNode{
+    int val;
+    ListNode next;
+    ListNode() {}
+    public ListNode(int val) {
+        this.val = val;
+    }
+    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+}
